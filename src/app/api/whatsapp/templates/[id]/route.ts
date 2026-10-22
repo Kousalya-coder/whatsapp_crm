@@ -146,8 +146,15 @@ export async function PATCH(
           { error: t('common.whatsappNotConfiguredDot') },
           { status: 400 },
         )
+      let accessToken: string
+      try {
+        accessToken = decrypt(config.access_token)
+      } catch {
+        return NextResponse.json(
+          { error: t('whatsappConfig.tokenUndecryptable') },
+          { status: 400 },
+        )
       }
-      const accessToken = decrypt(config.access_token)
 
       // Media headers (image/video/document) need a fresh Resumable-Upload
       // handle on every edit (Meta replaces components wholesale). Derive
@@ -275,7 +282,15 @@ export async function DELETE(
           { status: 400 },
         )
       }
-      const accessToken = decrypt(config.access_token)
+      let accessToken: string
+      try {
+        accessToken = decrypt(config.access_token)
+      } catch {
+        return NextResponse.json(
+          { error: t('whatsappConfig.tokenUndecryptable') },
+          { status: 400 },
+        )
+      }
       try {
         await deleteMessageTemplate({
           wabaId: config.waba_id,

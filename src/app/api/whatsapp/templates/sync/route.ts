@@ -168,7 +168,15 @@ export async function POST() {
       )
     }
 
-    const accessToken = decrypt(config.access_token)
+    let accessToken: string
+    try {
+      accessToken = decrypt(config.access_token)
+    } catch {
+      return NextResponse.json(
+        { error: t('whatsappConfig.tokenUndecryptable') },
+        { status: 400 },
+      )
+    }
 
     const metaTemplates: MetaTemplate[] = []
     let nextUrl:

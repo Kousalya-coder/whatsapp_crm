@@ -169,7 +169,15 @@ export async function POST(request: Request) {
         )
       }
 
-      const accessToken = decrypt(config.access_token)
+      let accessToken: string
+      try {
+        accessToken = decrypt(config.access_token)
+      } catch {
+        return NextResponse.json(
+          { error: t('whatsappConfig.tokenUndecryptable') },
+          { status: 400 },
+        )
+      }
 
       // Media headers (image/video/document) need a Resumable-Upload
       // handle (Meta rejects a plain URL at creation). Derive it from

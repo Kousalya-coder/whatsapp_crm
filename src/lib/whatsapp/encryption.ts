@@ -72,7 +72,13 @@ export function decrypt(encryptedText: string): string {
     )
     decipher.setAuthTag(authTag)
     let decrypted = decipher.update(ctHex, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
+    try {
+      decrypted += decipher.final('utf8')
+    } catch {
+      throw new Error(
+        'Decryption failed: unable to authenticate data. This usually indicates that ENCRYPTION_KEY has changed or does not match the key used when encrypting.',
+      )
+    }
     return decrypted
   }
 
@@ -91,7 +97,13 @@ export function decrypt(encryptedText: string): string {
       iv,
     )
     let decrypted = decipher.update(ctHex, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
+    try {
+      decrypted += decipher.final('utf8')
+    } catch {
+      throw new Error(
+        'Decryption failed: unable to authenticate data. This usually indicates that ENCRYPTION_KEY has changed or does not match the key used when encrypting.',
+      )
+    }
     return decrypted
   }
 
