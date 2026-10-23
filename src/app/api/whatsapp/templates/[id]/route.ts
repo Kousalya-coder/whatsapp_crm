@@ -146,6 +146,7 @@ export async function PATCH(
           { error: t('common.whatsappNotConfiguredDot') },
           { status: 400 },
         )
+      }
       let accessToken: string
       try {
         accessToken = decrypt(config.access_token)
