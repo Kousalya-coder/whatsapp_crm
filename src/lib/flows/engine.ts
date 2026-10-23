@@ -1127,9 +1127,22 @@ async function handleReplyForActiveRun(
   }
 
   if (matched) {
-    if (!(await claimReplyTransition(db, run, matched))) {
+    const selectedTitle =
+      message.kind === "interactive_reply" && message.reply_title
+        ? message.reply_title
+        : null;
+    const newVars = selectedTitle
+      ? {
+          ...run.vars,
+          selected_option: selectedTitle,
+          service: selectedTitle,
+          course: selectedTitle,
+        }
+      : run.vars;
+    if (!(await claimReplyTransition(db, run, matched, { vars: newVars }))) {
       return lostReplyRace(db, run, currentNode.node_key);
     }
+    run.vars = newVars;
     const outcome = await advanceFromNodeKey(db, run, matched, nodes);
     return {
       consumed: true,
